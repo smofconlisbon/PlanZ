@@ -1,0 +1,627 @@
+/*
+ * SMOFcon 43 theme, styled after https://www.smofconlisbon.org/
+ * Colours follow the Tailwind palette used on the main site.
+ */
+:root {
+    --smof-teal-400: #00d5be;
+    --smof-teal-600: #009689;
+    --smof-teal-700: #00786f;
+    --smof-teal-800: #005f5a;
+    --smof-teal-950: #022f2e;
+    --smof-gray-200: #e5e7eb;
+    --smof-gray-300: #d1d5dc;
+    --smof-gray-600: #4a5565;
+    --smof-gray-800: #1e2939;
+    --smof-gray-900: #101828;
+    --smof-sky-200: #b8e6fe;
+    --smof-sky-700: #0069a8;
+    --smof-orange-200: #ffd6a7;
+    --smof-orange-700: #ca3500;
+    --smof-yellow-300: #ffdf20;
+    /* Oranges, used to mark the staff view. The header is dark enough for the teal logo;
+       the menu bar and buttons carry the brighter orange. */
+    --smof-staff-900: #6b2a0a;
+    --smof-staff-800: #c2410c;
+    --smof-staff-700: #9a3412;
+    --smof-staff-600: #c2410c;
+    --smof-font: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --smof-shadow-md: 0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a;
+
+    /* Accent colours: teal in the participant view, overridden to orange in the staff view below */
+    --smof-accent: var(--smof-teal-600);
+    --smof-accent-hover: var(--smof-teal-700);
+    --smof-accent-ring: #00968966;
+    --smof-accent-selection: #00968940;
+    --smof-link: var(--smof-teal-800);
+    --smof-link-hover: var(--smof-teal-950);
+    --smof-menu-highlight: var(--smof-teal-700);
+    --smof-footer: var(--smof-teal-950);
+}
+/* Staff pages are the only ones with the staff menu */
+body:has(#staffNav) {
+    --smof-accent: var(--smof-staff-600);
+    --smof-accent-hover: var(--smof-staff-700);
+    --smof-accent-ring: #c2410c66;
+    --smof-accent-selection: #c2410c40;
+    --smof-link: var(--smof-staff-700);
+    --smof-link-hover: var(--smof-staff-900);
+    --smof-menu-highlight: var(--smof-staff-600);
+    /* Match the staff header */
+    --smof-footer: var(--smof-staff-900);
+}
+
+/* General */
+body.bs4 {
+    font-family: var(--smof-font);
+    color: var(--smof-gray-900);
+}
+body.bs4:not(.full-page) {
+    background-image: none;
+    background: #ffffff;
+}
+.bs4 a {
+    color: var(--smof-link);
+    text-decoration: underline;
+}
+.bs4 a:hover {
+    color: var(--smof-link-hover);
+}
+.bs4 a.btn,
+.bs4 a.nav-link,
+.bs4 a.dropdown-item {
+    text-decoration: none;
+}
+
+/* Header */
+.header.participant-header {
+    background-color: var(--smof-gray-900);
+    background-image: none;
+    color: #ffffff;
+}
+.header.staff-header {
+    /* Orange so the staff view is distinct from the participant view */
+    background-color: var(--smof-staff-900);
+    background-image: none;
+    color: #ffffff;
+}
+.header.staff-header .header-contents img {
+    /* White logo in the staff view: black out every pixel, then invert (transparency is kept),
+       then let a little of the header colour show through */
+    filter: brightness(0) invert(1) opacity(0.9);
+}
+.header-contents {
+    height: 6rem;
+    padding: 0.75rem 1.5rem;
+}
+.header-contents h1.d-md-block {
+    display: none !important;
+}
+.header-contents h1 .d-lg-inline {
+    display: none !important;
+}
+#welcome {
+    margin: 0.75rem 1rem 0 0;
+}
+#welcome p {
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+}
+#hide-header-but {
+    display: none;
+}
+#welcome .btn {
+    /* Drop the gap that was left for the hide-header button */
+    margin-right: 0 !important;
+}
+.alt-header-contents.participant-header,
+.alt-header-contents.staff-header {
+    background-color: var(--smof-gray-900);
+    color: #ffffff;
+    padding: 0.25rem 0.5rem;
+}
+.alt-header-contents.staff-header {
+    background-color: var(--smof-staff-900);
+}
+.alt-header-title {
+    font-family: var(--smof-font);
+    font-weight: normal;
+}
+.alt-header-title::first-line {
+    color: #ffffff;
+}
+
+/* Navigation */
+.navbar.bg-dark {
+    background-color: var(--smof-gray-800) !important;
+}
+#staffNav.navbar.bg-dark {
+    background-color: var(--smof-staff-800) !important;
+}
+#staffNav .dropdown-menu {
+    background-color: var(--smof-staff-900);
+}
+.navbar .nav-link {
+    color: #ffffff !important;
+}
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
+    text-decoration: underline;
+}
+.navbar .nav-item.active .nav-link,
+.navbar .nav-link.active {
+    color: var(--smof-teal-400) !important;
+}
+/*
+ * Staff/Participant View link drawn as a two-segment toggle: [Staff | Participant].
+ * Each page only has the link to the other view, so the link is the clickable half and a
+ * pseudo-element draws the current view's (highlighted, non-clickable) half beside it.
+ * The link's own text is hidden with font-size: 0 (so screen readers still get "Staff View" /
+ * "Participant View") and a shorter label is drawn in its place.
+ */
+.navbar {
+    --smof-toggle-width: 7.5rem;
+}
+.navbar #StaffView,
+.navbar #ParticipantView {
+    position: relative;
+    display: inline-block;
+    width: var(--smof-toggle-width);
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0;
+    text-align: center;
+    white-space: nowrap;
+    border: 1px solid #ffffff59;
+    transition: background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.navbar #StaffView::before,
+.navbar #StaffView::after,
+.navbar #ParticipantView::before,
+.navbar #ParticipantView::after {
+    font-size: 1rem;
+}
+/* The current view's half */
+.navbar #StaffView::before,
+.navbar #ParticipantView::after {
+    position: absolute;
+    top: -1px;
+    bottom: -1px;
+    width: var(--smof-toggle-width);
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #ffffff;
+    background-color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+    pointer-events: none;
+}
+.navbar #StaffView:hover,
+.navbar #StaffView:focus,
+.navbar #ParticipantView:hover,
+.navbar #ParticipantView:focus {
+    background-color: #ffffff1a;
+    text-decoration: none;
+}
+/* Participant pages: link is the left half, current view drawn on the right */
+.navbar #StaffView {
+    margin-right: var(--smof-toggle-width);
+    border-radius: 0.375rem 0 0 0.375rem;
+}
+.navbar #StaffView::before {
+    content: "Participant";
+    content: "Participant" / "";
+    left: 100%;
+    border-radius: 0 0.375rem 0.375rem 0;
+    color: var(--smof-gray-900);
+}
+.navbar #StaffView::after {
+    content: "Staff";
+    content: "Staff" / "";
+}
+/* Staff pages: link is the right half, current view drawn on the left */
+.navbar #ParticipantView {
+    margin-left: var(--smof-toggle-width);
+    border-radius: 0 0.375rem 0.375rem 0;
+}
+.navbar #ParticipantView::before {
+    content: "Participant";
+    content: "Participant" / "";
+}
+.navbar #ParticipantView::after {
+    content: "Staff";
+    content: "Staff" / "";
+    right: 100%;
+    border-radius: 0.375rem 0 0 0.375rem;
+    color: var(--smof-staff-800);
+}
+/* Staff menu: hide the username menu (Log out is in the header), leaving the toggle at the far right */
+#staffNav .navbar-collapse > .navbar-nav.dropdown {
+    display: none !important;
+}
+#staffNav .navbar-collapse > .navbar-nav:has(#ParticipantView) {
+    margin-right: 0 !important;
+}
+/* Search box in the menu bar: the markup forces Bootstrap's grey (bg-secondary text-white),
+   so tint it from the menu bar colour instead, and make it a normal white input when focused */
+.navbar input.form-control {
+    background-color: #00000033 !important;
+    border-color: #ffffff59;
+    color: #ffffff !important;
+}
+.navbar input.form-control::placeholder {
+    color: #ffffffbf;
+}
+.navbar input.form-control:focus {
+    background-color: #ffffff !important;
+    border-color: #ffffff;
+    color: var(--smof-gray-900) !important;
+}
+.navbar input.form-control:focus::placeholder {
+    color: var(--smof-gray-600);
+}
+.navbar .dropdown-menu {
+    background-color: var(--smof-gray-900);
+    border: none;
+    border-radius: 0.375rem;
+    box-shadow: var(--smof-shadow-md);
+}
+.navbar .dropdown-item {
+    color: #ffffff;
+}
+.navbar .dropdown-item:focus,
+.navbar .dropdown-item:hover,
+.navbar .dropdown-item:active {
+    background-color: var(--smof-menu-highlight);
+    color: #ffffff;
+}
+
+/* Buttons */
+.bs4 .btn {
+    border-radius: 0.375rem;
+    transition: background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.bs4 .btn-primary {
+    background-color: var(--smof-accent);
+    border-color: var(--smof-accent);
+    color: #ffffff;
+}
+.bs4 .btn-primary:hover,
+.bs4 .btn-primary:focus,
+.bs4 .btn-primary:not(:disabled):not(.disabled):active {
+    background-color: var(--smof-accent-hover);
+    border-color: var(--smof-accent-hover);
+    color: #ffffff;
+}
+.bs4 .btn-primary:focus,
+.bs4 .form-control:focus {
+    box-shadow: 0 0 0 0.2rem var(--smof-accent-ring);
+}
+.bs4 .btn-primary.disabled,
+.bs4 .btn-primary:disabled {
+    background-color: var(--smof-accent);
+    border-color: var(--smof-accent);
+    opacity: 0.5;
+}
+.bs4 .btn-secondary {
+    background-color: var(--smof-gray-600);
+    border-color: var(--smof-gray-600);
+}
+.bs4 .form-control:focus {
+    border-color: var(--smof-accent);
+}
+
+/* Inputs: tint native controls with the accent colour */
+body.bs4 {
+    accent-color: var(--smof-accent);
+    caret-color: var(--smof-accent-hover);
+}
+.bs4 input:focus,
+.bs4 select:focus,
+.bs4 textarea:focus {
+    outline: 2px solid var(--smof-accent);
+    outline-offset: 0;
+}
+.bs4 .form-control:focus {
+    outline: none;
+}
+.bs4 ::selection {
+    background-color: var(--smof-accent-selection);
+}
+
+/* Alerts */
+.bs4 .alert {
+    border: none;
+    border-radius: 0.375rem;
+}
+.bs4 .alert-primary,
+.bs4 .alert-info {
+    background-color: var(--smof-sky-200);
+    color: var(--smof-gray-900);
+}
+.bs4 .alert-warning {
+    background-color: var(--smof-yellow-300);
+    color: var(--smof-gray-900);
+}
+.bs4 .alert-danger {
+    background-color: var(--smof-orange-200);
+    color: var(--smof-gray-900);
+}
+.bs4 .alert p:last-child {
+    margin-bottom: 0;
+}
+
+/* Cards */
+.bs4 .card {
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: var(--smof-shadow-md), 0 0 0 1px var(--smof-gray-200);
+}
+
+/* Demographic details: stack each label above its input so pairs never wrap apart */
+form[name="addform"] > .card > .card-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0.375rem;
+}
+form[name="addform"] > .card > .card-body > .row {
+    display: contents;
+}
+form[name="addform"] > .card > .card-body > .row > [class*="col"] {
+    padding-left: 0;
+    padding-right: 0;
+    max-width: none;
+}
+form[name="addform"] > .card > .card-body label {
+    margin-bottom: 0;
+}
+form[name="addform"] > .card > .card-body > .row > .col-12 label {
+    /* This label shares a column with its textarea, so match the grid gap */
+    margin-bottom: 0.375rem;
+}
+form[name="addform"] > .card > .card-body > .row > .col-auto:has(> .form-control),
+form[name="addform"] > .card > .card-body > .row > .col-12 {
+    margin-bottom: 0.75rem;
+}
+/* Narrow the page so inputs don't stretch across wide screens */
+.container:has(> form[name="addform"]) {
+    max-width: 48rem;
+}
+
+/* Create/Edit Session: relabel "Prospective Participant Info" */
+form[name="sessform"] label[for="persppartinfo"] {
+    visibility: hidden;
+    font-size: 0;
+}
+form[name="sessform"] label[for="persppartinfo"]::after {
+    content: "Notes to show to prospective participants:";
+    visibility: visible;
+    font-size: 1rem;
+}
+
+/* Footer */
+footer {
+    background-color: var(--smof-footer);
+    color: #ffffff;
+    margin: 0 -15px;
+    padding: 1.5rem;
+}
+/* Keep the footer at the bottom of the viewport on short pages. Some pages close the page
+   wrapper early and put the footer in a wrapper of its own, so only the wrapper holding the
+   footer grows to fill the space. */
+body.bs4:not(.full-page):has(> .container-fluid > footer) {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+body.bs4:not(.full-page) > .container-fluid:has(> footer) {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+body.bs4:not(.full-page) > .container-fluid > footer {
+    margin-top: auto;
+}
+/* The gap above the footer is a transparent border, so it works whatever comes before the
+   footer (on some pages that's an invisible <script>, which a margin would sit on) */
+footer {
+    border-top: 3rem solid transparent;
+    background-clip: padding-box;
+}
+footer a,
+footer a:hover {
+    color: #ffffff !important;
+    text-decoration: underline;
+}
+footer hr {
+    display: none;
+}
+
+/* Mobile */
+@media (max-width: 991.98px) {
+    /* The base markup only shows the logo on large screens */
+    .header-contents img.d-none {
+        display: block !important;
+    }
+    /* Bigger tap targets in the collapsed menu */
+    .navbar-collapse .nav-link {
+        padding-top: 0.6rem !important;
+        padding-bottom: 0.6rem !important;
+    }
+}
+@media (max-width: 767.98px) {
+    .header-contents {
+        height: 4rem;
+        padding: 0.5rem 1rem;
+    }
+    #welcome {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin: 0 1rem 0 0;
+    }
+    #welcome p {
+        font-size: 0.875rem;
+        margin: 0;
+    }
+    #welcome .btn {
+        white-space: nowrap;
+    }
+
+    /* Nested .container inside .container-fluid doubles the side gutters */
+    body.bs4 > .container-fluid .container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* Keep form controls inside the screen and large enough that iOS doesn't zoom on focus */
+    .bs4 input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+    .bs4 select,
+    .bs4 textarea {
+        max-width: 100%;
+        font-size: 1rem;
+    }
+    .bs4 input:not([type]),
+    .bs4 input[type="text"],
+    .bs4 input[type="email"],
+    .bs4 input[type="password"],
+    .bs4 input[type="tel"],
+    .bs4 input[type="number"],
+    .bs4 input[type="search"],
+    .bs4 textarea {
+        width: 100%;
+    }
+    .bs4 input:not([type]):not(.form-control),
+    .bs4 input[type="text"]:not(.form-control),
+    .bs4 input[type="email"]:not(.form-control),
+    .bs4 input[type="password"]:not(.form-control),
+    .bs4 input[type="tel"]:not(.form-control),
+    .bs4 input[type="number"]:not(.form-control),
+    .bs4 input[type="search"]:not(.form-control),
+    .bs4 select:not(.form-control),
+    .bs4 textarea:not(.form-control) {
+        border: 1px solid var(--smof-gray-300);
+        border-radius: 0.375rem;
+        padding: 0.375rem 0.5rem;
+        background-color: #ffffff;
+        height: auto;
+    }
+    .bs4 .col-auto {
+        max-width: 100%;
+    }
+
+    /* Profile: password labels use fixed-width columns */
+    #passGroup .col-2,
+    #passGroup .col-4 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    /* General Interests: fewer columns of checkboxes */
+    .roles-list-container,
+    .interests-list-container {
+        column-count: 2;
+        column-gap: 1rem;
+    }
+    .role-entry-container,
+    .interest-entry-container {
+        break-inside: avoid;
+    }
+    .role-entry-container label,
+    .interest-entry-container label {
+        display: flex;
+        align-items: baseline;
+    }
+
+    /* Photo: fixed 400px images */
+    .upload-image,
+    .approved-image {
+        width: 100% !important;
+        max-width: 400px;
+        height: auto !important;
+        aspect-ratio: 1;
+    }
+    #photoUploadArea {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    form[name="photoform"] .card {
+        margin-bottom: 1rem;
+    }
+
+    /* Search results: turn the table-like rows into stacked cards */
+    .row-fluid hr + .row {
+        display: none;
+    }
+    .schedule-card > .row {
+        margin: 0;
+        padding: 0.5rem 0.25rem;
+        row-gap: 0.25rem;
+    }
+    .schedule-card > .row > div {
+        flex: 0 0 auto;
+        width: auto;
+        max-width: 100%;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+    .schedule-card > .row > .col-3p25,
+    .schedule-card > .row > .col-4 {
+        order: -1;
+        flex-basis: 100%;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+    .schedule-card > .row > .col-2p75,
+    .schedule-card > .row > .col-3 {
+        flex-basis: 100%;
+        color: var(--smof-gray-600);
+    }
+    .schedule-card > .row > .col-3p25,
+    .schedule-card > .row > .col-4 {
+        padding-right: 2.5rem !important;
+    }
+    .schedule-card > .row > .expander-wrapper {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.25rem;
+    }
+    .schedule-card .list-group-item .row > div {
+        flex: 0 0 100%;
+        max-width: 100%;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+    .schedule-card .list-group-item .row > div:nth-child(odd) {
+        font-weight: bold;
+        margin-top: 0.5rem;
+    }
+
+    /* Messages flanked by empty spacer columns */
+    .row > .col-3:empty {
+        display: none;
+    }
+    .row > .col-6.alert {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+/* Table tents */
+.table-tent .pronouns {
+    font-size: 36pt;
+}
+.table-tent .front {
+    background-image: url(./WisCon_Logo_Stacked.svg);
+    background-size: 0.75in 0.75in;
+    background-position: 0.25in 0.75in;
+    background-repeat: no-repeat;
+}
+.table-tent .back {
+    background-image: url(./WisCon_Logo_Stacked.svg);
+    background-size: 0.75in 0.75in;
+    background-position: 0.25in 0.75in;
+    background-repeat: no-repeat;
+}
+
+@media print
+{
+    * {-webkit-print-color-adjust:exact;}
+}
