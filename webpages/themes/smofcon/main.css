@@ -391,7 +391,18 @@ form[name="sessform"] label[for="persppartinfo"] {
     font-size: 0;
 }
 form[name="sessform"] label[for="persppartinfo"]::after {
-    content: "Notes to show to prospective participants:";
+    content: "Notes to show to Prospective Participants:";
+    visibility: visible;
+    font-size: 1rem;
+}
+
+/* Create/Edit Session: relabel "Notes for Participants" */
+form[name="sessform"] label[for="notesforpart"] {
+    visibility: hidden;
+    font-size: 0;
+}
+form[name="sessform"] label[for="notesforpart"]::after {
+    content: "Notes to show Participants:";
     visibility: visible;
     font-size: 1rem;
 }
