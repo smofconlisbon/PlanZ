@@ -60,10 +60,14 @@ body.bs4:not(.full-page) {
     background: #ffffff;
 }
 .bs4 a {
-    color: var(--smof-link);
     text-decoration: underline;
 }
-.bs4 a:hover {
+/* Buttons keep Bootstrap's text colour, which this would otherwise override.
+   :where() keeps the specificity the same as .bs4 a, so more specific link colours still win. */
+.bs4 a:where(:not(.btn), .btn-link) {
+    color: var(--smof-link);
+}
+.bs4 a:where(:not(.btn), .btn-link):hover {
     color: var(--smof-link-hover);
 }
 .bs4 a.btn,
