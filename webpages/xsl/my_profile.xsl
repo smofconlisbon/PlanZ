@@ -460,7 +460,7 @@
                     <xsl:if test="/doc/query[@queryName='credentials']/row">
                         <fieldset>
                             <div class="row mt-3">
-                                <legend class="col-auto">Professions</legend>
+                                <legend class="col-auto">Convention related roles</legend>
                             </div>
                             <div class="row mb-2">
                                 <div class="col-sm-12">
