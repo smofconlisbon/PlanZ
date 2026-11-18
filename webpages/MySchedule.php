@@ -100,8 +100,7 @@ echo fetchCustomText("all_panelists_1");
 echo fetchCustomText("all_panelists_2");
 echo "<p>Thank you &mdash; <a class=\"alert-link\" href=\"mailto:$PROGRAM_EMAIL\"> Programming </a></div>\n";
 
-if (!$registered) {
-
+if (USE_REG_SYSTEM === TRUE && !$registered) {
     echo "<div class=\"alert alert-warning\">";
     echo "You are not currently registered for " . CON_NAME . ".";
     if ($poscount >= 3) {
